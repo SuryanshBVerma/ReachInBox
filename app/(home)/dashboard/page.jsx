@@ -10,11 +10,11 @@ const Dashboard = () => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const token = searchParams.get('token'); // Extract token from URL query params
+    const token = searchParams.get('token');
     if (token) {
       localStorage.setItem('token', token);
     }
-  }, [searchParams]); // Trigger whenever searchParams changes
+  }, [searchParams]); 
 
   return (
     <div className='bg-black h-[91vh] flex justify-center items-center'>

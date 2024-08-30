@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export default function SignUpCard() {
 
     const auth = () => {
-        router.push('reach-in-box-gold.vercel.app/dashboard')
+        router.push('https://hiring.reachinbox.xyz/api/v1/auth/google-login?redirect_to=http://localhost:3000/dashboard')
     }
     const router = useRouter();
     return (
