@@ -4,7 +4,7 @@ import MailPage from '@/components/mail/page';
 import { mailLogo } from '@/components/svg';
 import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react';
 
 const Dashboard = () => {
   const searchParams = useSearchParams();
@@ -18,9 +18,15 @@ const Dashboard = () => {
 
   return (
     <div className='bg-black h-[91vh] flex justify-center items-center'>
-      <Image src={mailLogo} alt='logo'/>
+      <Image src={mailLogo} alt='logo' width={100} height={100} /> {/* Ensure width and height are specified */}
     </div>
-  )
+  );
 }
 
-export default Dashboard;
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Dashboard />
+    </Suspense>
+  );
+}
