@@ -12,8 +12,7 @@ const Dashboard = () => {
   useEffect(() => {
     const token = searchParams.get('token'); // Extract token from URL query params
     if (token) {
-      console.log(token);
-      
+      localStorage.setItem('token', token); 
     }
   }, [searchParams]); // Trigger whenever searchParams changes
 

@@ -30,8 +30,8 @@ export function MailList({ items }) {
             <div className="flex w-full flex-col gap-1">
               <div className="flex items-center">
                 <div className="flex items-center gap-2">
-                  <div className="font-semibold">{item.name}</div>
-                  {!item.read && (
+                  <div className="font-semibold">{item.fromName}</div>
+                  {!item.isRead && (
                     <span className="flex h-2 w-2 rounded-full bg-blue-600" />
                   )}
                 </div>
@@ -43,7 +43,7 @@ export function MailList({ items }) {
                       : "text-muted-foreground"
                   )}
                 >
-                  {formatDistanceToNow(new Date(item.date), {
+                  {formatDistanceToNow(new Date(item.sentAt), {
                     addSuffix: true,
                   })}
                 </div>
@@ -51,17 +51,9 @@ export function MailList({ items }) {
               <div className="text-xs font-medium">{item.subject}</div>
             </div>
             <div className="line-clamp-2 text-xs text-muted-foreground">
-              {item.text.substring(0, 300)}
+              {/* Rendering plain text content extracted from HTML body */}
+              {stripHtmlTags(item.body).substring(0, 300)}
             </div>
-            {item.labels.length ? (
-              <div className="flex items-center gap-2">
-                {item.labels.map((label) => (
-                  <Badge key={label} variant={getBadgeVariantFromLabel(label)}>
-                    {label}
-                  </Badge>
-                ))}
-              </div>
-            ) : null}
           </button>
         ))}
       </div>
@@ -69,14 +61,9 @@ export function MailList({ items }) {
   );
 }
 
-function getBadgeVariantFromLabel(label) {
-  if (["work"].includes(label.toLowerCase())) {
-    return "default";
-  }
-
-  if (["personal"].includes(label.toLowerCase())) {
-    return "outline";
-  }
-
-  return "secondary";
+// Helper function to strip HTML tags from the body
+function stripHtmlTags(htmlString) {
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = htmlString;
+  return tempDiv.textContent || tempDiv.innerText || "";
 }

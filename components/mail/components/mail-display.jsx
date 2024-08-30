@@ -47,6 +47,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
+import { AlertDialogFooter, AlertDialogHeader } from "@/components/ui/alert-dialog";
 
 export function MailDisplay({ mail }) {
   const today = new Date();
@@ -75,7 +77,7 @@ export function MailDisplay({ mail }) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!mail} onClick={''}>
                 <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Move to trash</span>
               </Button>
@@ -196,17 +198,17 @@ export function MailDisplay({ mail }) {
               <Avatar>
                 <AvatarImage alt={mail.name} />
                 <AvatarFallback>
-                  {mail.name
+                  {mail.fromName
                     .split(" ")
                     .map((chunk) => chunk[0])
                     .join("")}
                 </AvatarFallback>
               </Avatar>
               <div className="grid gap-1">
-                <div className="font-semibold">{mail.name}</div>
-                <div className="line-clamp-1 text-xs">{mail.subject}</div>
+                <div className="font-semibold">{mail.fromName}</div>
+                <div className="line-clamp-1 text-xs">{mail.fromEmail}</div>
                 <div className="line-clamp-1 text-xs">
-                  <span className="font-medium">Reply-To:</span> {mail.email}
+                  <span className="font-medium">Reply-To:</span> {mail.toEmail}
                 </div>
               </div>
             </div>
@@ -218,7 +220,7 @@ export function MailDisplay({ mail }) {
           </div>
           <Separator />
           <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
-            {mail.text}
+            {stripHtmlTags(mail.body)}
           </div>
           <Separator className="mt-auto" />
           <div className="p-4">
@@ -256,3 +258,10 @@ export function MailDisplay({ mail }) {
     </div>
   );
 }
+
+function stripHtmlTags(htmlString) {
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = htmlString;
+  return tempDiv.textContent || tempDiv.innerText || "";
+}
+

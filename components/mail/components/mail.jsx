@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Search,
 } from "lucide-react";
@@ -29,14 +29,48 @@ import { MailList } from "./mail-list";
 import { useMail } from "../use-mail";
 import RefreshIcon from "@/components/svg/RefreshIcon";
 
+
+
 export function Mail({
   mails,
   defaultLayout = [25, 65],
 }) {
   const [mail] = useMail();
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    // Get the token from localStorage
+    const token = localStorage.getItem("token");
+  
+    // Function to make the GET request
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://hiring.reachinbox.xyz/api/v1/onebox/list', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`, 
+            'Content-Type': 'application/json'
+          }
+        });
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const res = await response.json();
+        console.log('Data:', res.data); 
+        setData(res.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
   return (
-    <TooltipProvider delayDuration={0}>
+    <>
+    {data ? <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
         direction="horizontal"
         onLayout={(sizes) => {
@@ -61,7 +95,7 @@ export function Mail({
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              <MailList items={mails} />
+              {data.length> 0 && <MailList items={data} />}
             </TabsContent>
             <TabsContent value="unread" className="m-0">
               <MailList items={mails?.filter((item) => !item.read)} />
@@ -71,10 +105,10 @@ export function Mail({
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
           <MailDisplay
-            mail={mails?.find((item) => item.id === mail.selected) || null}
+            mail={data?.find((item) => item.id === mail.selected) || null}
           />
         </ResizablePanel>
       </ResizablePanelGroup>
-    </TooltipProvider>
+    </TooltipProvider>: (<div>error</div>)}</>
   );
 }
