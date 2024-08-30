@@ -12,13 +12,13 @@ const Dashboard = () => {
   useEffect(() => {
     const token = searchParams.get('token'); // Extract token from URL query params
     if (token) {
-      localStorage.setItem('token', token); 
+      localStorage.setItem('token', token);
     }
   }, [searchParams]); // Trigger whenever searchParams changes
 
   return (
     <div className='bg-black h-[91vh] flex justify-center items-center'>
-      <Image src={mailLogo} alt='logo' width={100} height={100} /> {/* Ensure width and height are specified */}
+      <Image src={mailLogo} alt='logo' />
     </div>
   );
 }
